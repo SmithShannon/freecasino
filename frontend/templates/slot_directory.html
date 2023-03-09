@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        {% include 'main_style.css' %}
+    </style>
+</head>
+<body>
+  <div id="container">
+      {% include 'user.html' %}
+      {% include 'menu.html' %}
+    <ul>
+      {% for slot in slots %}
+        <li><input type="button" value="{{slot}}" onclick="window.location.href=url+'{{slot}}#'+token"/></li>
+      {% endfor %}
+    </ul>
+  </div>
+  <script>
+    const url = "http://localhost:8000/slots/";
+    const token = String(window.location).split("#")[1];
+
+    //getUser(token.split("&")[0].split("=")[1]);
+  </script>
+</body>
+</html>

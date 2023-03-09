@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <audio id='spin_effect' src='http://localhost:5000/test/slot_spin.mp3' type='audio/mp3'></audio>
+    <input type="button" value="play" onclick="play();" />
+    <script>
+        const time = new Date();
+
+        async function p(){
+            for (var i = 0; i < 100; i++){
+                s = new Audio('http://localhost:5000/test/slot_spin.mp3');
+                s.play();
+                await new Promise ((resolve) => setTimeout(resolve,1));
+                console.log(time.getTime());
+                //console.log(i);
+            }
+        }
+
+        function play(){
+            var sound = document.getElementById('spin_effect');
+            p();
+        }
+    </script>
+</body>
+</html>

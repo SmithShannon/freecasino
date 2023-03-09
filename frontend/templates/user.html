@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div id="user">
+        <h3>User: <span id="username"></span></h3>
+        <h4>Winnings: <span id="winnings"></span></h4>
+        <h4>Plays: <span id="credits"></span></h4>
+    </div>
+    <script>
+        function getUser(token){
+            console.log(window.location);
+            fetch('http://localhost:8000/user',{
+                method:'POST',
+                headers:{
+                    'Authorization':'bearer '+token,
+                    'Content-Type':'application/json',
+                    'Access-Control-Allow-Origin':'http://localhost:8000/user',
+                    'Access-Control-Allow-Headers': ['Origin']
+                }
+            }).then(function(r){
+                return r.json();
+            }).then(function(response){
+                if (response['success']){
+                console.log(document);
+                document.getElementById('username').innerHTML = response['username'];
+                document.getElementById('winnings').innerHTML = response['winnings'];
+                document.getElementById('credits').innerHTML = response['credits'];
+                console.log(response);
+            } else {
+                window.location.href = 'http://localhost:8000/error/'+response['status_code']+'/'+response['message'];
+            }
+            }).catch(function(error){
+                console.log(error);
+            });
+        }
+        getUser(String(window.location).split('#')[1].split('&')[0].split('=')[1]);
+    </script>
+</body>
+</html>

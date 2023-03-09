@@ -1,0 +1,70 @@
+#container{
+    width: 1080px;
+    height: 1920px;
+    background-color:#2F377B;
+}
+
+div#window{
+    background-color:white;
+    border-style:solid;
+    //border-color:#2F377B;
+    border-width:thick;
+    //border-image:url('http://localhost:5000/test/border.png') 15 round;
+    overflow:hidden;
+}
+input#spin {
+    display:block;
+    margin: auto;
+    width: 50%;
+    background-color:#D0C884;
+    cursor:pointer;
+    border-style:outset;
+    border-color:red;
+    border-width:thick;
+}
+
+input#spin:disabled{
+    background-color:gray;
+    cursor:not-allowed;
+    border-style:inset;
+}
+
+table{
+    border-style:none;
+}
+
+tr {
+    display:block;
+    border-style:none;
+}
+
+tr#hidden div {
+    position:relative;
+    margin-top:-50%;
+}
+
+td {
+    border-style:none;
+}
+
+td img{
+    width:100%;
+}
+td.match{
+    animation: blink 0.05s infinite;
+}
+
+@keyframes blink{
+    0% {
+        background-color:#D0C884;
+    }
+    25% {
+        background-color:#FF0000;
+    }
+    50% {
+        background-color:#2F377B;
+    }
+    75%{
+        background-color:#FFFFFF;
+    }
+}

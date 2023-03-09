@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        {% include 'main_style.css' %}
+    </style>
+    <title>Title</title>
+</head>
+<body>
+      {% include 'user.html' %}
+      {% include 'menu.html' %}
+ <p>Ad goes here.  Click, and watch, and credits are yours!</p>
+<input type="button" value="Watch" onclick="add_credits();" />
+<script>
+    var token = String(window.location).split('#')[1].split('&')[0].split('=')[1];
+    function add_credits(){
+        console.log(token);
+        fetch('http://localhost:5000/top-up',{
+            method:'GET',
+            headers:{
+                'Authorization': 'Bearer '+token,
+                'Content-Type':'application/json',
+                'Access-Control-Allow-Origin':'http://localhost:8000'
+            }
+        }).then(function (response){
+            return response.json();
+        }).then(function (response){
+            getUser(token);
+        });
+    }
+    document.getElementById('user_panel').setAttribute('src','http://localhost:8000/user#'+token);
+</script>
+</body>
+</html>

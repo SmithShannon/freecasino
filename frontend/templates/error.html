@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        {% include 'main_style.css' %}
+    </style>
+    <title>Title</title>
+</head>
+<body>
+  <h1>Error</h1>
+  <p>There was an error and are unable to continue.</p>
+  <p>Status Code: {{status_code}}</p>
+  <p>Message: {{message}}</p>
+  <p>Best option is to log back in.</p>
+  <a href="http://localhost:8000/login">Log back in</a>
+  <p>If issue persists, submit a ticket.</p>
+  <a>Submit a ticket</a>
+</body>
+</html>

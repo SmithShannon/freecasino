@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        {{style}}
+    </style>
+</head>
+<body>
+<div id="container">
+    {% include 'user.html' %}
+    {% include 'menu.html' %}
+    <div id="window"></div>
+    <input type='button' value='spin' id='spin' onclick='spin();'/>
+    <div id='matches'></div>
+    <div id='debug'></div>
+</div>
+<script>
+
+/*
+Sound Effect from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=music&amp;utm_content=68731">Pixabay</a>
+*/
+    function debug(line){
+        var d = document.getElementById('debug');
+        var p = document.createElement('p');
+        p.innerHTML = line;
+        d.appendChild(p);
+    }
+
+    function match_history(matches){
+        var m = document.getElementById('matches');
+        for (i in matches){
+            var img = document.createElement('img');
+            console.log(matches[i]);
+        }
+        //d.appendChild(p);
+    }
+    
+    function compareArray(array1,array2){
+        if (array1.length!=array2.length){
+            return false;
+        } else {
+            for (i in array1){
+                if (array1[i]!=array2[i]){
+                    return false;
+                }
+            }
+        } return true;
+    }
+    function setMatches(matches){
+    	console.log(matches);    
+        if (matches.length > 0){
+            for (i in matches){
+                for (c in matches[i][2]){
+                    console.log(matches[i][2][c]);
+                    var cell = document.getElementById(matches[i][2][c][1]+"_"+matches[i][2][c][0]);
+                    cell.setAttribute("class","match");
+                }
+            }
+        }
+    }
+
+    function resetMatches(){
+        var m = document.getElementsByClassName("match");
+        for (i = m.length-1; i >= 0; i--){
+            console.log(i);
+            m[i].setAttribute('class','');
+        }
+    }
+
+    const url = "http://localhost:8000";
+    const auth_string = String(window.location).split('#')[1];
+    const token = auth_string.split('&')[0].split("=")[1];
+    var reel = [
+        {% for r in reel %}
+            {% if loop.index==1 %}
+            '{{r}}'
+            {% else %}
+            ,'{{r}}'
+            {% endif %}
+        {% endfor %}
+    ];
+    var window_size = {{window_size}};
+    var reel_pos = {{reel_pos}};
+
+    function display_window(window,matches){
+        const ans = document.getElementById('window');
+        ans.innerHTML = "";
+        var table = document.createElement("table");
+        //Hidden Row for animations
+        var tr = document.createElement('tr');
+        tr.setAttribute('id','hidden');
+        var div = document.createElement('div');
+        for (i in window[0]){
+            var td = document.createElement("td");
+            td.setAttribute("id","-1_"+i);
+            //td.style.transform = 'translateY(-100%)';
+            var img = document.createElement('img');
+            img.setAttribute('src',url+window[0][i]);
+            //img.style.transform = 'translateY(-100%)';
+            td.appendChild(img);
+            div.appendChild(td);
+        }
+        tr.appendChild(div);
+        table.appendChild(tr);
+        for (r in window){
+            var tr = document.createElement("tr");
+            for (c in window[r]){
+                var td = document.createElement("td");
+                td.setAttribute("id",r+"_"+c);
+                var img = document.createElement("img");
+                img.setAttribute('src',url+window[r][c]);
+                td.appendChild(img);
+                tr.appendChild(td);
+            }
+            table.appendChild(tr);
+        }
+        ans.appendChild(table);
+		setMatches(matches);
+    }
+
+     async function moveReels(start_pos,end_pos){
+        var spin_no = 0;
+        var spins = [];
+        var pos = start_pos;
+        for (p in start_pos){
+            spin_no += Math.ceil(Math.random()*10*reel.length)+10;
+            spins[p] = spin_no;
+        }
+
+        var y = 10;
+        while (!(compareArray(pos,end_pos) && spins[spins.length-1]==0)){
+            if (y==0){
+                var spin_effect = new Audio (url+'/{{slot_id}}/slot_spin.mp3');
+                spin_effect.play();
+            }
+            var windows = Array.from(Array(window_size).keys());
+            //console.log(y);
+		    for (s in spins){
+		        //console.log(spins[s],pos[s],end_pos[s]);
+		        if (!(spins[s]==0 && pos[s]==end_pos[s])){
+                    spins[s] = ((y==0) ? ((spins[s]==0) ? 0 : spins[s]-1) : spins[s]);
+                    pos[s] = ((y==0) ? ((pos[s]-1)+reel.length)%reel.length : pos[s]);
+                    //set the hidden row for the animation
+                    var htd = document.getElementById("-1_"+s);
+                    var himg = document.createElement('img');
+                    var offset = Number(((pos[s]-1)+reel.length)%reel.length);
+                    himg.setAttribute('src',url+reel[offset]);
+                    himg.style.transform = 'translateY('+y+'%)';
+                    htd.innerHTML = "";
+                    htd.appendChild(himg);
+                    for (w in windows){
+                        var offset = (Number(pos[s]) + Number(w))%reel.length;
+                        var td = document.getElementById(w+"_"+s);
+                        var img = document.createElement('img');
+                        img.setAttribute('src',url+reel[offset%reel.length]);
+                        img.style.transform = 'translateY('+y+'%)';
+                        td.innerHTML = "";
+                        td.appendChild(img);
+                    }
+                }
+            }
+            var interval = ((spins[spins.length-1]==0) ? 100 : Math.ceil((1/spins[spins.length-1])*100));
+            //console.log(spins);
+            y = (y+10)%100;
+            await new Promise ((resolve) => setTimeout(resolve,interval));
+		}
+     }
+
+
+
+    function spin(){
+        document.getElementById('spin').setAttribute('disabled','disabled');
+        resetMatches();
+        fetch('http://localhost:8000/slots/{{slot_id}}/spin',{
+            method:'POST',
+            body:{},
+            headers:{
+                'Authorization': 'Bearer '+token,
+                'Content-Type':'application/json',
+                'Access-Control-Allow-Origin':'http://localhost:8000'
+            }
+        }).then(function(response){
+            return response.json();
+        }).then(function(response){
+            if (response['success'] && !response['canceled']){
+                var pos = response['reel_pos'];
+                console.log(pos);
+                moveReels(reel_pos,pos).then(function(){
+                    setMatches(JSON.parse(response['matches']));
+                    match_history(JSON.parse(response['matches']));
+                    document.getElementById('spin').removeAttribute('disabled');
+                    reel_pos = pos;
+                });
+
+            //setMatches(JSON.parse(response['matches']));
+            //document.getElementById('spin').removeAttribute('disabled');
+            } else if (response['success'] && response['canceled']){
+                document.getElementById('matches').innerHTML = "<p>"+response['message']+"</p>";
+                document.getElementById('spin').removeAttribute('disabled');
+            } else {
+                window.location.href = 'http://localhost:8000/error/'+response['error']+'/'+response['message'];
+            }
+
+        }).catch(function(error){
+            document.getElementById('window').innerHTML = error;
+        });
+    }
+    
+    /*fetch(url+'slots/test',{
+        method:'GET',
+        headers:{
+            'Authorization':'Bearer '+token,
+            'Content-Type':'application/json',
+            'Access-Control-Allow-Origin':'http://localhost:8000'
+        }
+    }).then(function(response){
+        return response.json();
+    }).then(function(response){
+        if (response['success']){
+            display_window(JSON.parse(response['window']),[]);
+            reel = response['reel'];
+            window_size = response['window_size'];
+            reel_pos = response['reel_pos'];
+        } else {
+            window.location.href = 'http://localhost:8000/error/'+response['error']+'/'+response['message'];
+        }
+    }).catch(function(error){
+        console.log(error);
+        window.location.href = "http://localhost:8000/error"
+    });*/
+    /*display_window(
+        JSON.parse('{{window}}')
+    ,[]);*/
+    const ans = document.getElementById('window');
+    ans.innerHTML = "";
+    var table = document.createElement("table");
+    //Hidden Row for animations
+    var div = document.createElement('div');
+    var display_window = ['hidden'].concat(Array.from(Array(window_size).keys()));
+    //window.unshift('hidden');
+    for (w in display_window){
+        var tr = document.createElement('tr');
+        tr.setAttribute('id',display_window[w]);
+        for (s in reel_pos){
+            var td = document.createElement('td');
+            var offset = (Number(reel_pos[s]) + Number(w))%reel.length;
+            var img = document.createElement('img');
+            console.log(display_window[w]);
+            td.setAttribute('id',((display_window[w]=='hidden') ? '-1_'+s : display_window[w]+"_"+s));
+            img.setAttribute('src',url+reel[offset%reel.length]);
+            td.innerHTML = "";
+            td.appendChild(img);
+            ((display_window[w]=='hidden') ? div.appendChild(td) : tr.appendChild(td));
+        }
+        if (tr.getAttribute('id')=='hidden'){
+            tr.appendChild(div);
+            table.appendChild(tr);
+        } else {
+            table.appendChild(tr);
+        }
+    }
+    ans.appendChild(table);
+
+</script>
+</body>
+</html>
