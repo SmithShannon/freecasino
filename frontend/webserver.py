@@ -1,6 +1,6 @@
 import sys
 
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, send_file, jsonify
 from flask_cors import CORS
 import requests
 
@@ -75,6 +75,10 @@ def logout():
 @app.route('/error/<status_code>/<message>',methods=['GET'])
 def error(status_code,message):
     return render_template('error.html',status_code=status_code,message=message)
+
+@app.route('/font/<font>',methods=['GET'])
+def get_font(font):
+    return send_file('static/font/{font}'.format(font=font))
 
 @app.route('/<slot_id>/<file>',methods=['GET'])
 def get_file(slot_id,file):

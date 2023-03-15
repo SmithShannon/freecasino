@@ -1,0 +1,94 @@
+@font-face {
+    font-family:"AmazObitaemOstrov";
+    src:url('font/Amazobitaemostrovv2-ZGK8.ttf') format('truetype');
+}
+
+@font-face {
+    font-family:"EnterSansman";
+    src:url('font/EnterSansmanBold-gEVY.ttf') format('truetype');
+}
+
+@font-face {
+    font-family:"Nakamura";
+    src:url('font/Nakamura-nR64.ttf') format('truetype');
+}
+
+#container{
+    width: 1080px;
+    height: 1920px;
+    background-color:#000000;
+    font-family:"EnterSansman",sans-serif;
+    text-align:center;
+    color:#000000;
+    -webkit-text-stroke-width:1px;
+    -webkit-text-stroke-color:#00FF00;
+}
+
+#container ul{
+    list-style-type:none;
+}
+
+#container h1{
+    font-family:"Nakamura",sans-serif;
+    font-size:100px;
+    padding:25px;
+    outline-width:1px;
+    outline-style:solid;
+    outline-color:#00FF00;
+    margin:150px;
+}
+
+#container h2{
+    font-size:50px;
+    padding:25px;
+}
+
+#container .glow_text{
+    -webkit-animation: glow_text 1s ease-in-out infinite alternate;
+    -moz-animation: glow_text 1s ease-in-out infinite alternate;
+    animation: glow_text 1s ease-in-out infinite alternate;
+}
+
+#container .glow_box{
+    -webkit-animation: glow_box 1s ease-in-out infinite alternate;
+    -moz-animation: glow_box 1s ease-in-out infinite alternate;
+    animation: glow_box 1s ease-in-out infinite alternate;
+}
+
+
+#container input{
+    background-color:#000000;
+    border-color:#00FF00;
+    border-style:outset;
+    outline-color:#00FF00;
+    outline-style:outset;
+    font-size:40px;
+    font-family:"EnterSansman";
+    cursor:pointer;
+}
+
+#container input:hover{
+    -webkit-animation: glow_text 1s ease-in-out infinite alternate;
+}
+
+#container input:onclick{
+    -webkit-animation: glow_box 1s ease-in-out infinite alternate;
+}
+
+@-webkit-keyframes glow_text {
+  from {
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #00FF00, 0 0 40px #00FF00, 0 0 50px #00FF00, 0 0 60px #00FF00, 0 0 70px #00FF00;
+  }
+  to {
+    text-shadow: 0 0 20px #fff, 0 0 30px #55FF55, 0 0 40px #55FF55, 0 0 50px #55FF55, 0 0 60px #55FF55, 0 0 70px #55FF55, 0 0 80px #55FF55;
+  }
+}
+
+@-webkit-keyframes glow_box {
+  from {
+    box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #00FF00, 0 0 40px #00FF00, 0 0 50px #00FF00, 0 0 60px #00FF00, 0 0 70px #00FF00;
+  }
+  to {
+    box-shadow: 0 0 20px #fff, 0 0 30px #55FF55, 0 0 40px #55FF55, 0 0 50px #55FF55, 0 0 60px #55FF55, 0 0 70px #55FF55, 0 0 80px #55FF55;
+  }
+}

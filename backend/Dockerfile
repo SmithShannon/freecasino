@@ -19,4 +19,5 @@ RUN pip3 install pip-upgrader
 RUN pip-upgrade -p all --skip-package-installation
 RUN pip3 install -r requirements.txt
 RUN rm requirements.txt
+EXPOSE 5000
 ENTRYPOINT python3 server.py

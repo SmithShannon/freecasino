@@ -8,9 +8,11 @@
     <title>Title</title>
 </head>
 <body>
+<div id="container">
       {% include 'user.html' %}
       {% include 'menu.html' %}
  <p>Ad goes here.  Click, and watch, and credits are yours!</p>
+    <video></video>
 <input type="button" value="Watch" onclick="add_credits();" />
 <script>
     var token = String(window.location).split('#')[1].split('&')[0].split('=')[1];
@@ -31,5 +33,6 @@
     }
     document.getElementById('user_panel').setAttribute('src','http://localhost:8000/user#'+token);
 </script>
+</div>
 </body>
 </html>

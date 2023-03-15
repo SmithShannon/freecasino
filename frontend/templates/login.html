@@ -1,16 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
     <style>
         {% include 'main_style.css' %}
     </style>
-    <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
-<a href="https://dev-np3peh5l.us.auth0.com/authorize?audience=/slots/&response_type=token&client_id=jCP1aadrvs6kWPXuDTkodxs6MUeptC5v&redirect_uri=http://127.0.0.1:8000/login/token">
-    Login
-</a>
+<div id="container">
+    <h2 >Welcome to</h2>
+    <h1 class="glow_text">Neo Bit Casino</h1>
+    <h2>Where you pay with your time, and are rewarded with gift cards!</h2>
+    <input type="button"
+           class="glow"
+           value="Login"
+           onclick="window.location.href = 'https://dev-np3peh5l.us.auth0.com/authorize?audience=/slots/&response_type=token&client_id=jCP1aadrvs6kWPXuDTkodxs6MUeptC5v&redirect_uri=http://127.0.0.1:8000/login/token';"/>
+</div>
 <div w3-include-html="www.google.com"></div>
 </body>
 </html>
